@@ -1,0 +1,18 @@
+*.class
+.settings
+.project
+bin/
+clframework/bin/
+VectorAdd/bin/
+clframework/.settings
+VectorAdd/.settings
+clframework/.project
+VectorAdd/.project
+
+# Mobile Tools for Java (J2ME)
+.mtj.tmp/
+
+# Package Files #
+
+# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
+hs_err_pid*
