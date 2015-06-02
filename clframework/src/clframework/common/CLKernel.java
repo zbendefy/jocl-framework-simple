@@ -23,9 +23,9 @@ import org.jocl.cl_program;
 
 public class CLKernel {
 
-	CLContext clContext;
-	cl_program program = null;
-	Map<String, cl_kernel> kernels = new HashMap<String, cl_kernel>();
+	private CLContext clContext;
+	private cl_program program = null;
+	private Map<String, cl_kernel> kernels = new HashMap<String, cl_kernel>();
 
 	public cl_program getProgram() {
 		return program;
@@ -57,7 +57,7 @@ public class CLKernel {
 		this.clContext = clContext;
 		
 		int[] errcode = new int[1];
-		program = clCreateProgramWithSource(clContext.context, 1,
+		program = clCreateProgramWithSource(clContext.getContext(), 1,
 				programSource, null, errcode);
 
 		if (errcode[0] != CL_SUCCESS) {

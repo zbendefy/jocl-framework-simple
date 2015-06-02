@@ -7,9 +7,9 @@ import org.jocl.cl_mem;
 
 public class MemObject {
 
-	cl_mem memobject = null;
-	CLContext context;
-	long memsize;
+	private cl_mem memobject = null;
+	private CLContext context;
+	private long memsize;
 
 	private MemObject(CLContext c, long size, cl_mem mo) {
 		memobject = mo;

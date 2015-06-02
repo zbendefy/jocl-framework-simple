@@ -13,9 +13,9 @@ import org.jocl.cl_context_properties;
 import org.jocl.cl_device_id;
 
 public class CLContext {
-	cl_context context;
-	cl_command_queue commandQueue;
-	CLDevice clDevice;
+	private cl_context context;
+	private cl_command_queue commandQueue;
+	private CLDevice clDevice;
 
 	/**
 	 * Returns the opencl context
