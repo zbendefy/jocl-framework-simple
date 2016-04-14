@@ -71,6 +71,12 @@ public class CLSourceLoader {
 		return getFileSource(filepath, null);
 	}
 	
+	/**
+	 * Replaces a set of keys with the corresponding values
+	 * @param content The file content
+	 * @param dictionary A map containing keywords to replace
+	 * @return The processed file content
+	 */
 	public static String processFile(String content, Map<String, String> dictionary)
 	{
 		if (dictionary == null)

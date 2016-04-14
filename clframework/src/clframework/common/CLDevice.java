@@ -240,6 +240,12 @@ public class CLDevice {
 		return getDeviceLongArrayProperty(CL_DEVICE_MAX_WORK_ITEM_SIZES,
 				(int) workItemDimensions);
 	}
+	
+	public long getMaxWorkgroupSize()
+	{
+		return getDeviceLongProperty(CL_DEVICE_MAX_WORK_GROUP_SIZE);
+		
+	}
 
 	public String getDeviceStringProperty(int Property) {
 		return getDeviceString(clDevice, Property);

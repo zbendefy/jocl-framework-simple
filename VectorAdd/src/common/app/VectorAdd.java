@@ -1,6 +1,5 @@
 package common.app;
 
-import java.lang.reflect.Parameter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -34,7 +33,7 @@ public class VectorAdd {
 		CLDevice device = devices.get(0);
 		CLContext context = new CLContext(device);
 		CLKernel kernel = null;
-
+		
 		System.out.println("Using device: " + device.toString());
 		
 		try {

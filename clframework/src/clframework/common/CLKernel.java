@@ -27,6 +27,11 @@ public class CLKernel {
 	private cl_program program = null;
 	private Map<String, cl_kernel> kernels = new HashMap<String, cl_kernel>();
 
+	public CLContext getContext()
+	{
+		return clContext;
+	}
+	
 	public cl_program getProgram() {
 		return program;
 	}
@@ -106,14 +111,9 @@ public class CLKernel {
 	 */
 	public void enqueueNDRangeKernel(String kernelName, List<MemObject> params, long[] global_work_size)
 	{
-		for (int i = 0; i < params.size(); i++) {
-			clSetKernelArg(kernels.get(kernelName), i, Sizeof.cl_mem,
-					Pointer.to(params.get(i).getMemObject()));
-		}
-		
-		clEnqueueNDRangeKernel(clContext.getCommandQueue(), kernels.get(kernelName),
-				global_work_size.length, null, global_work_size, null, 0, null, null);
+		enqueueNDRangeKernel(kernelName, params, global_work_size, null, null);
 	}
+	
 
 	/**
 	 * 
@@ -121,7 +121,7 @@ public class CLKernel {
 	 * @param params A list of memory objects to be set as kernel arguments
 	 * @param global_work_size The number of kernels to run in each dimension. The number of dimensions is specified via the length of this array
 	 * @param global_work_offset Global work offset. If null is given, no offset will be applied
-	 * @param local_work_size Local work size. If null, an automatic local work size will be calculated by the driver
+	 * @param local_work_size Local work size. If null, an automatic local work size will be defined by the driver
 	 */
 	public void enqueueNDRangeKernel(String kernelName, List<MemObject> params, long[] global_work_size, long[] global_work_offset, long[] local_work_size)
 	{

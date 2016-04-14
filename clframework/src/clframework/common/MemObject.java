@@ -27,15 +27,20 @@ public class MemObject {
 			memobject = null;
 		}
 	}
+	
+	public long GetSize()
+	{
+		return memsize;
+	}
 
 	public void ReadBufferWithBlocking(Pointer destination) {
 		clEnqueueReadBuffer(context.getCommandQueue(), memobject, CL_TRUE, 0,
 				memsize, destination, 0, null, null);
 	}
 
-	public void ReadBufferWithBlocking(Pointer destination, long offset, long size) {
+	public void ReadBufferWithBlocking(Pointer destination, long offset, long length) {
 		clEnqueueReadBuffer(context.getCommandQueue(), memobject, CL_TRUE,
-				offset, size, destination, 0, null, null);
+				offset, length, destination, 0, null, null);
 	}
 	
 	public void enqueueReadBuffer(Pointer destination) {
@@ -43,9 +48,9 @@ public class MemObject {
 				memsize, destination, 0, null, null);
 	}
 	
-	public void enqueueReadBuffer(Pointer destination, long offset, long size) {
+	public void enqueueReadBuffer(Pointer destination, long offset, long length) {
 		clEnqueueReadBuffer(context.getCommandQueue(), memobject, CL_FALSE,
-				offset, size, destination, 0, null, null);
+				offset, length, destination, 0, null, null);
 	}
 
 	public static MemObject createMemObjectWriteOnly(CLContext context,
