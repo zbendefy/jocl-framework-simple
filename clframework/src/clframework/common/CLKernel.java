@@ -23,9 +23,18 @@ import org.jocl.cl_program;
 
 public class CLKernel {
 
+	private IBuildEventListener buildEventListener = null;
 	private CLContext clContext;
 	private cl_program program = null;
 	private Map<String, cl_kernel> kernels = new HashMap<String, cl_kernel>();
+
+	public IBuildEventListener getBuildEventListener() {
+		return buildEventListener;
+	}
+
+	public void setBuildEventListener(IBuildEventListener buildEventListener) {
+		this.buildEventListener = buildEventListener;
+	}
 
 	public CLContext getContext()
 	{
@@ -57,8 +66,9 @@ public class CLKernel {
 		kernels.clear();
 	}
 	
-	public CLKernel(CLContext clContext, String[] programSource, String[] kernelNames, 
-			String compileOptions) throws Exception {
+	private void Init(CLContext clContext, String[] programSource, String[] kernelNames, 
+			String compileOptions)throws Exception
+	{
 		this.clContext = clContext;
 		
 		int[] errcode = new int[1];
@@ -76,20 +86,24 @@ public class CLKernel {
 		int buildResult = clBuildProgram(program, 1, devices, compileOptions,
 				null, null);
 
-		if (buildResult != CL_SUCCESS) {
-			long[] logSize = new long[1];
-			clGetProgramBuildInfo(program, clContext.getClDevice().getClDevice(),
-					CL.CL_PROGRAM_BUILD_LOG, 0, null, logSize);
+		long[] logSize = new long[1];
+		clGetProgramBuildInfo(program, clContext.getClDevice().getClDevice(),
+				CL.CL_PROGRAM_BUILD_LOG, 0, null, logSize);
 
-			byte logData[] = new byte[(int) logSize[0]];
-			clGetProgramBuildInfo(program, clContext.getClDevice().getClDevice(),
-					CL.CL_PROGRAM_BUILD_LOG, logSize[0], Pointer.to(logData),
-					null);
+		byte logData[] = new byte[(int) logSize[0]];
+		clGetProgramBuildInfo(program, clContext.getClDevice().getClDevice(),
+				CL.CL_PROGRAM_BUILD_LOG, logSize[0], Pointer.to(logData),
+				null);
+
+		if (buildResult != CL_SUCCESS) {
 			throw new Exception("Failed to build cl program! Error code: "
 					+ buildResult + " Build log: "
 					+ System.getProperty("line.separator")
 					+ new String(logData));
 		}
+		
+		if(buildEventListener != null)
+			buildEventListener.ShowBuildLog(new String(logData));
 
 		for (int i = 0; i < kernelNames.length; i++) {
 			cl_kernel kernel = clCreateKernel(program, kernelNames[i], errcode);
@@ -102,6 +116,18 @@ public class CLKernel {
 			kernels.put(kernelNames[i], kernel);
 		}
 	}
+	
+	public CLKernel(CLContext clContext, String[] programSource, String[] kernelNames, 
+			String compileOptions) throws Exception {
+		Init(clContext, programSource, kernelNames, compileOptions);
+	}
+	
+	public CLKernel(CLContext clContext, String[] programSource, String[] kernelNames, 
+			String compileOptions, IBuildEventListener bev) throws Exception {
+		buildEventListener = bev;
+		Init(clContext, programSource, kernelNames, compileOptions);
+	}
+	
 	
 	/**
 	 * Enqueues a run of a kernel with automatic local work size.
